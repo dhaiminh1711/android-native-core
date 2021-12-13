@@ -8,8 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
+import com.working.core.repository.BaseRepository
 
-abstract class BaseFragment<VBinding : ViewBinding, VModel : ViewModel> : Fragment() {
+abstract class BaseFragment<
+        VIEW_BINDING : ViewBinding,
+        VIEW_MODEL : ViewModel,
+        BASE_REPOSITORY : BaseRepository> : Fragment() {
 
     /*
     Để xác định fragment có dùng chung ViewModel với activity cha của nó hay không
@@ -18,11 +22,14 @@ abstract class BaseFragment<VBinding : ViewBinding, VModel : ViewModel> : Fragme
     */
     open var useSharedViewModel: Boolean = false
 
-    protected lateinit var viewModel: VModel
-    protected abstract fun getViewModelClass(): Class<VModel>
+    protected lateinit var viewModel: VIEW_MODEL
+    protected abstract fun getViewModelClass(): Class<VIEW_MODEL>
 
-    protected lateinit var binding: VBinding
-    protected abstract fun getViewBinding(): VBinding
+    protected lateinit var binding: VIEW_BINDING
+    protected abstract fun getViewBinding(): VIEW_BINDING
+
+    protected lateinit var repository: BASE_REPOSITORY
+    protected abstract fun getBaseRepository(): BASE_REPOSITORY
 
     /*
     Lifecycle của fragment từ lúc create cho tới lúc bị destroy hoàn toàn
@@ -32,8 +39,11 @@ abstract class BaseFragment<VBinding : ViewBinding, VModel : ViewModel> : Fragme
         init()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
-        = binding.root
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) = binding.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -78,6 +88,7 @@ abstract class BaseFragment<VBinding : ViewBinding, VModel : ViewModel> : Fragme
         super.onDetach()
     }
 
+    // Setup recycler view hoặc là đổ dữ liệu vào giao diện UI
     open fun setUpViews() {}
 
     open fun observeViews() {}
@@ -86,12 +97,13 @@ abstract class BaseFragment<VBinding : ViewBinding, VModel : ViewModel> : Fragme
 
     private fun init() {
         binding = getViewBinding()
+
         viewModel = if (useSharedViewModel) {
-            ViewModelProvider(requireActivity()).get(
-                getViewModelClass()
-            )
+            ViewModelProvider(requireActivity()).get(getViewModelClass())
         } else {
             ViewModelProvider(this).get(getViewModelClass())
         }
+
+        repository = getBaseRepository()
     }
 }
