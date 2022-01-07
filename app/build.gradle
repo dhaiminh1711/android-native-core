@@ -43,11 +43,11 @@ dependencies {
     // Network request
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.3"))
-    implementation 'com.squareup.okhttp3:okhttp'
-    implementation 'com.squareup.okhttp3:logging-interceptor'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
 
     // Asynchronous
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-native-mt'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
 

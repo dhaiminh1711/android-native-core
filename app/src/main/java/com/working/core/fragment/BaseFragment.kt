@@ -99,9 +99,9 @@ abstract class BaseFragment<
         binding = getViewBinding()
 
         viewModel = if (useSharedViewModel) {
-            ViewModelProvider(requireActivity()).get(getViewModelClass())
+            ViewModelProvider(requireActivity())[getViewModelClass()]
         } else {
-            ViewModelProvider(this).get(getViewModelClass())
+            ViewModelProvider(this)[getViewModelClass()]
         }
 
         repository = getBaseRepository()
